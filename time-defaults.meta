@@ -5,8 +5,8 @@ name=time-defaults
 version=1.0.0
 type=hook
 description=Apply configurable default times to date-only due, scheduled, wait, and until fields
-repo=https://github.com/linuxcaffe/tw-time-default-hook
-base_url=https://raw.githubusercontent.com/linuxcaffe/tw-time-default-hook/main
+repo=https://github.com/linuxcaffe/tw-time-defaults-hook
+base_url=https://raw.githubusercontent.com/linuxcaffe/tw-time-defaults-hook/main
 files=on-add_time-defaults.py:hook:hooks,on-modify_time-defaults.py:hook:hooks,time-defaults.rc:config:config
 tags=hook,dates,time,due,scheduled
 

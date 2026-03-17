@@ -1,5 +1,5 @@
-- Project: https://github.com/linuxcaffe/tw-time-default-hook
-- Issues:  https://github.com/linuxcaffe/tw-time-default-hook/issues
+- Project: https://github.com/linuxcaffe/tw-time-defaults-hook
+- Issues:  https://github.com/linuxcaffe/tw-time-defaults-hook/issues
 
 # time-defaults
 
@@ -53,7 +53,7 @@ include ~/.task/config/time-defaults.rc
 ### Option 1 — Install script
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/linuxcaffe/tw-time-default-hook/main/time-defaults.install | bash
+curl -fsSL https://raw.githubusercontent.com/linuxcaffe/tw-time-defaults-hook/main/time-defaults.install | bash
 ```
 
 Installs both hooks to `~/.task/hooks/` and a starter config to `~/.task/config/`.
@@ -67,7 +67,7 @@ tw -I time-defaults
 ### Option 3 — Manual
 
 ```bash
-BASE=https://raw.githubusercontent.com/linuxcaffe/tw-time-default-hook/main
+BASE=https://raw.githubusercontent.com/linuxcaffe/tw-time-defaults-hook/main
 
 curl -fsSL "$BASE/on-add_time-defaults.py"    -o ~/.task/hooks/on-add_time-defaults.py
 curl -fsSL "$BASE/on-modify_time-defaults.py" -o ~/.task/hooks/on-modify_time-defaults.py
