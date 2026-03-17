@@ -1,0 +1,14 @@
+# time-defaults.rc — default times for date-only task fields
+#
+# When due, scheduled, wait, or until is set to a date without a time,
+# Taskwarrior stores midnight. These settings replace that midnight with
+# a more useful time of day.
+#
+# Add to ~/.taskrc:  include ~/.task/config/time-defaults.rc
+#
+# Format: HH:MM (24-hour). Comment out any field to leave it at midnight.
+
+time-defaults.due       = 21:00
+time-defaults.scheduled = 09:00
+time-defaults.wait      = 06:00
+time-defaults.until     = 23:59
