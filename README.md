@@ -24,6 +24,9 @@ actually match your workflow — configured once, applied automatically.
 Set `due:friday` and it lands at your configured end-of-day time. Set `scheduled:tomorrow` and it
 appears in your list at your configured start-of-day. No more midnight phantom urgency.
 
+On modify, only the date fields that modify sets or changes get a default time. A midnight date
+already on the task stays as it is, so editing a description never moves its due date.
+
 ---
 
 ## Configuration
@@ -128,6 +131,14 @@ The result: zero overhead on tasks without date fields, minimal overhead on the 
 
 ---
 
+## Tests
+
+```bash
+python3 -m pytest -q tests/     # runs both hooks in America/Toronto, so local midnight isn't UTC
+```
+
+---
+
 ## Project status
 
 Active. Tested on Taskwarrior 2.6.x, Linux.
@@ -139,4 +150,4 @@ Active. Tested on Taskwarrior 2.6.x, Linux.
 - License: MIT
 - Language: Python 3
 - Requires: Taskwarrior 2.6.x, Python 3.6+
-- Version: 1.0.0
+- Version: 1.0.1

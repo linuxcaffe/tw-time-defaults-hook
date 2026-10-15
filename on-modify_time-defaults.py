@@ -20,23 +20,14 @@ lines = sys.stdin.read().splitlines()
 old = json.loads(lines[0])
 new = json.loads(lines[1])
 
-# Passthrough immediately if no date fields are present in new task
-if not any(f in new for f in DATE_FIELDS):
+# Only date fields this modify set or changed: a date already on the task stays as it is
+# (an edit to the description must not move an old midnight date).
+changed = [f for f in DATE_FIELDS if f in new and new[f] != old.get(f)]
+if not changed:
     print(json.dumps(new))
     sys.exit(0)
 
-# Passthrough if no date field is at local midnight (most modifies)
-# We do a quick string check first — TW midnight UTC is T000000Z,
-# but local midnight varies by timezone, so we defer the real check to Phase 2
-# only if at least one date field ends in T000000Z (fast string scan).
-def _looks_like_midnight(ts):
-    return ts.endswith('T000000Z')
-
-if not any(f in new and _looks_like_midnight(new[f]) for f in DATE_FIELDS):
-    print(json.dumps(new))
-    sys.exit(0)
-
-# ── Phase 2: heavy imports — only reached if a date field looks like midnight ─
+# ── Phase 2: heavy imports — only reached if a date field changed ─────────────
 import os
 from datetime import datetime, timezone
 
@@ -85,9 +76,9 @@ def _apply_time(ts, t_str):
 
 cfg = _read_config()
 
-for field in DATE_FIELDS:
+for field in changed:
     key = f'time-defaults.{field}'
-    if field in new and key in cfg and _is_local_midnight(new[field]):
+    if key in cfg and _is_local_midnight(new[field]):
         new[field] = _apply_time(new[field], cfg[key])
 
 print(json.dumps(new))
