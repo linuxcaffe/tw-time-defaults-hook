@@ -3,7 +3,8 @@
 #
 # When a task is added with due/scheduled/wait/until set to a date only
 # (no time specified), Taskwarrior stores midnight local time. This hook
-# replaces that midnight with a configured default time.
+# replaces that midnight with a configured default time. A time given in the
+# command (due:2026-10-17T00:00) is left alone: midnight on purpose (all-day).
 #
 # Config (in time-defaults.rc, included from ~/.taskrc):
 #   time-defaults.due       = 21:00
@@ -24,6 +25,7 @@ if not any(f in new for f in DATE_FIELDS):
 
 # ── Phase 2: heavy imports — only reached if task has at least one date field ─
 import os
+import re
 from datetime import datetime, timezone
 
 
@@ -69,11 +71,29 @@ def _apply_time(ts, t_str):
     return new_local.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
 
+def _explicit_times():
+    """Fields the command gave a time for (due:2026-10-17T00:00): a midnight there is meant.
+
+    Taskwarrior passes the command line as argv 'args:task …'. A name is an abbreviation of the
+    field (sched:), at least two letters; words after -- are text. Only a T time counts, so
+    due:sod and due:tomorrow are dates and still get the default.
+    """
+    line = next((a[5:] for a in sys.argv[1:] if a.startswith('args:')), '')
+    line = line.split(' -- ', 1)[0]
+    fields = set()
+    for m in re.finditer(r'(?:^|\s)([a-z]{2,}):(\S+)', line):
+        name, value = m.groups()
+        if re.search(r'\dT\d', value):
+            fields.update(f for f in DATE_FIELDS if f.startswith(name))
+    return fields
+
+
 cfg = _read_config()
+explicit = _explicit_times()
 
 for field in DATE_FIELDS:
     key = f'time-defaults.{field}'
-    if field in new and key in cfg and _is_local_midnight(new[field]):
+    if field in new and field not in explicit and key in cfg and _is_local_midnight(new[field]):
         new[field] = _apply_time(new[field], cfg[key])
 
 print(json.dumps(new))

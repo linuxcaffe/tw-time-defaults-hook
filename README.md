@@ -27,6 +27,11 @@ appears in your list at your configured start-of-day. No more midnight phantom u
 On modify, only the date fields that modify sets or changes get a default time. A midnight date
 already on the task stays as it is, so editing a description never moves its due date.
 
+A time you type is left alone: `due:2026-10-17T00:00` means midnight, so it stays midnight. Only
+an explicit `T` time counts; `due:sod` and `due:tomorrow` are dates and get the default. This is
+how tw-web's Calendar keeps an all-day task (it writes `scheduled:2026-10-17T00:00:00`). The hook
+reads the command from the `args:` Taskwarrior passes it, and ignores text after `--`.
+
 ---
 
 ## Configuration
